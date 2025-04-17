@@ -1,5 +1,9 @@
 ﻿
+//Sayfa yüklendikten (HTML DOM tamamen yüklendikten) sonra belirli JavaScript kodlarının çalışmasını sağlar.
 $(document).ready(function () {
+
+    const broadcastMessageToClientHubMethodCall = "BroadcastMessageToClient";  //Hub'da tanımlı olan metot ismi
+    const ReceiveMessageForAllClientMethodCall = "ReceiveMessageForAllClient"; //Client tarafında tanımlı olan metot ismi
 
     const connection = new signalR.HubConnectionBuilder().
         //Bağlantı URL'sini ayarla
@@ -16,7 +20,20 @@ $(document).ready(function () {
     try {
         start();
     } catch (e) {
-        setTimeout(() => start(),5000)
+        setTimeout(() => start(), 5000)
     }
+
+    //Hub'dan gelen mesajı alır. Burası sunucu yani hub tarafından tetiklenir
+    connection.on(ReceiveMessageForAllClientMethodCall, (message) => {
+        console.log("Gelen Mesaj", message)
+    })
+
+
+    //Butona tıklandığında hub'a mesaj gönderilir
+    $("#btn-send-message-all-client").click(function () {
+
+        const message = "Hello World!";
+        connection.invoke(broadcastMessageToClientHubMethodCall, message).catch(errr => console.error("Hata", err));
+    })
 
 })
