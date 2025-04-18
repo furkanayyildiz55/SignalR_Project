@@ -23,7 +23,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-app.MapHub<ExampleHub>("examplehub");
+app.MapHub<ExampleHub>("/examplehub");
+app.MapHub<ExampleTypeSafeHub>("/exampleTypeSafeHub");
 
 app.MapControllerRoute(
     name: "default",

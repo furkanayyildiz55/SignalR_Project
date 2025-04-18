@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     const connection = new signalR.HubConnectionBuilder().
         //Bağlantı URL'sini ayarla
-        withUrl("/examplehub")
+        withUrl("/exampleTypeSafeHub")
         //Loglama seviyesini ayarla
         .configureLogging(signalR.LogLevel.Information).build();
 
