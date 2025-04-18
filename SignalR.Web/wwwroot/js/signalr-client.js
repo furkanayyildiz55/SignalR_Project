@@ -3,7 +3,8 @@
 $(document).ready(function () {
 
     const broadcastMessageToClientHubMethodCall = "BroadcastMessageToClient";  //Hub'da tanımlı olan metot ismi
-    const ReceiveMessageForAllClientMethodCall = "ReceiveMessageForAllClient"; //Client tarafında tanımlı olan metot ismi
+    const receiveMessageForAllClientMethodCall = "ReceiveMessageForAllClient"; //Client tarafında tanımlı olan metot ismi
+    const receiveConnectedClientCountForAllClient = "ReceiveConnectedClientCountForAllClient";
 
     const connection = new signalR.HubConnectionBuilder().
         //Bağlantı URL'sini ayarla
@@ -23,9 +24,16 @@ $(document).ready(function () {
         setTimeout(() => start(), 5000)
     }
 
-    //Hub'dan gelen mesajı alır. Burası sunucu yani hub tarafından tetiklenir
-    connection.on(ReceiveMessageForAllClientMethodCall, (message) => {
+    //Hub'dan gelen mesajı alır. Burası sunucu yani hub tarafından tetiklenir //Subscribe olmak 
+    connection.on(receiveMessageForAllClientMethodCall, (message) => {
         console.log("Gelen Mesaj", message)
+    })
+
+    var span_client_count = $("#connected-client-count");
+    connection.on(receiveConnectedClientCountForAllClient, (count) => {
+        span_client_count.text(count);
+        console.log("connected client count", count)
+
     })
 
 
