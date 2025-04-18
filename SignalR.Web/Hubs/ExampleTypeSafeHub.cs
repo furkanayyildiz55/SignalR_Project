@@ -26,5 +26,11 @@ namespace SignalR.Web.Hubs
             await Clients.All.ReceiveConnectedClientCountForAllClient(ConnectedClientsCount);
             base.OnDisconnectedAsync(exception);
         }
+
+        //Sadece çağrıyı yapan istemciye mesaj gönderir
+        public async Task BroadcastMessageToCallerClient(string message)   //Bu metot istemci tarafından tetiklenir
+        {
+            await Clients.Caller.ReceiveMessageForCallerClient(message);  //burası ise istemcide bir metot tetikler 
+        }
     }
 }

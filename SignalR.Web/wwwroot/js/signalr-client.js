@@ -5,7 +5,10 @@ $(document).ready(function () {
     const broadcastMessageToClientHubMethodCall = "BroadcastMessageToClient";  //Hub'da tanımlı olan metot ismi
     const receiveMessageForAllClientMethodCall = "ReceiveMessageForAllClient"; //Client tarafında tanımlı olan metot ismi
     const receiveConnectedClientCountForAllClient = "ReceiveConnectedClientCountForAllClient";
+    const receiveMessageForCallerClient = "ReceiveMessageForCallerClient"; 
+    const broadcastMessageToCallerClient = "BroadcastMessageToCallerClient";
 
+    ///BAĞLANTI
     const connection = new signalR.HubConnectionBuilder().
         //Bağlantı URL'sini ayarla
         withUrl("/exampleTypeSafeHub")
@@ -29,6 +32,7 @@ $(document).ready(function () {
         console.log("Gelen Mesaj", message)
     })
 
+    //Hub a bağlı sekme sayısını alır
     var span_client_count = $("#connected-client-count");
     connection.on(receiveConnectedClientCountForAllClient, (count) => {
         span_client_count.text(count);
@@ -39,9 +43,22 @@ $(document).ready(function () {
 
     //Butona tıklandığında hub'a mesaj gönderilir
     $("#btn-send-message-all-client").click(function () {
-
         const message = "Hello World!";
         connection.invoke(broadcastMessageToClientHubMethodCall, message).catch(errr => console.error("Hata", err));
     })
+
+
+    //CALLER 
+    //Butona tıklandığında hub'a mesaj gönderilir
+    $("#btn-send-message-caller-client").click(function () {
+        const message = "Hello World! QWER";
+        connection.invoke(broadcastMessageToCallerClient, message).catch(errr => console.error("Hata", err));
+    })
+
+    connection.on(receiveMessageForCallerClient, (message) => {
+        console.log("(Caller) Gelen Mesaj", message);
+    })
+    //CALLER 
+
 
 })
