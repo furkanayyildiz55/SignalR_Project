@@ -39,11 +39,37 @@ namespace SignalR.Web.Hubs
             await Clients.Others.ReceiveMessageForOtherClient(message);
         }
 
-
+        
         //spesific bir istemciye mesaj gönderir
         public async Task BroadcastMessageToIndividualClient(string connectionId, string message)
         {
             await Clients.Client(connectionId).ReceiveMessageForIndividualClient(message);
-        } 
+        }
+
+        #region Grup İşlemleri
+        //Bir grup içindeki clientlere mesaj göndeme
+        public async Task BroadcastMessageToGroupClients(string groupName, string message)
+        {
+            await Clients.Group(groupName).ReceiveMessageForGroupClients(message);
+        }
+
+        //clienti grupa ekleme
+        public async Task AddGroup(string groupName)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Clients.Caller.ReceiveMessageForCallerClient($"Yeni bir gruba eklendin. Grup Adı: {groupName}");
+            await Clients.Caller.ReceiveMessageForOtherClient($"Yeni bir kullanıcı gruba eklendi. Kullanıcı Adı: {Context.ConnectionId} Grup Adı: {groupName}");
+            await Clients.Groups(groupName).ReceiveMessageForGroupClients($"Yeni bir kullanıcı bizim gruba eklendi.");
+        }
+        //clienti gruptan çıkarma
+        public async Task RemoveGroup(string groupName)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+            await Clients.Caller.ReceiveMessageForCallerClient($"Bir gruptan Ayrıldın. Grup Adı: {groupName}");
+            await Clients.Caller.ReceiveMessageForOtherClient($"Bir kullanıcı gruptan ayrıldı. Kullanıcı Adı: {Context.ConnectionId} Grup Adı: {groupName}");
+            await Clients.Groups(groupName).ReceiveMessageForGroupClients($"Yeni bir kullanıcı bizim gruptan ayrıldı.");
+        }
+
+        #endregion
     }
 }

@@ -95,6 +95,77 @@ $(document).ready(function () {
     connection.on(receiveMessageForIndividualClient, (message) => {
         console.log("(Spesific) Gelen Mesaj", message);
     })
+    //OTHER CLİENT MESSAGE EXAMPLE
+
+    //GRUP İŞLEMLERİ ÖRNEĞİ
+    const groupA = "GrupA";
+    const groupB = "GrupB";
+    let currentGroupList = [];
+
+    //Html olarak grup listesini düzenler kullanıcıya gösterir
+    function refreshGroupList() {
+        $("#groupList").empty();
+        currentGroupList.forEach(group => {
+            $("#groupList").append(`<p>${group}</p>`);
+        })
+    }
+
+    $("#btn-groupA-add").click(function () {
+
+        if (currentGroupList.includes(groupA)) return;
+
+        connection.invoke("AddGroup", groupA).then(() => {
+            currentGroupList.push(groupA);
+            refreshGroupList();
+        })
+    })
+
+    $("#btn-groupA-remove").click(function () {
+        if (!currentGroupList.includes(groupA)) return;
+        connection.invoke("RemoveGroup", groupA).then(() => {
+            currentGroupList = currentGroupList.filter(x => x !== groupA);
+            refreshGroupList();
+        })
+    })
+
+    $("#btn-groupB-add").click(function () {
+        if (currentGroupList.includes(groupB)) return;
+
+        connection.invoke("AddGroup", groupB).then(() => {
+            currentGroupList.push(groupB);
+            refreshGroupList();
+        })
+    })
+
+    $("#btn-groupB-remove").click(function () {
+        if (!currentGroupList.includes(groupB)) return;
+        connection.invoke("RemoveGroup", groupB).then(() => {
+            currentGroupList = currentGroupList.filter(x => x !== groupB);
+            refreshGroupList();
+        })
+    })
+
+
+    $("#btn-groupA-send-message").click(function () {
+
+        const message = "Hello World! Grup A";
+        connection.invoke("BroadcastMessageToGroupClients", groupA, message).catch(err => console.error("Hata", err));
+        console.log("Grup A'ya mesaj gönderildi => İçierik :", message);
+    })
+
+
+    $("#btn-groupB-send-message").click(function () {
+
+        const message = "Hello World! Grup B";
+        connection.invoke("BroadcastMessageToGroupClients", groupB, message).catch(err => console.error("Hata", err));
+        console.log("Grup B'ya mesaj gönderildi => İçierik :", message);
+    })
+
+    connection.on("ReceiveMessageForGroupClients", (message) => {
+        console.log("Gelen Mesaj", message);
+    })
+
+    //GRUP İŞLEMLERİ ÖRNEĞİ
 
 
 })
