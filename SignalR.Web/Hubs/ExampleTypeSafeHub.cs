@@ -32,5 +32,18 @@ namespace SignalR.Web.Hubs
         {
             await Clients.Caller.ReceiveMessageForCallerClient(message);  //burası ise istemcide bir metot tetikler 
         }
+
+        //Sadece diğer istemcilere mesaj gönderir, çağrıyı yapan isytemciye gönderilmez
+        public async Task BroadcastMessageToOtherClient(string message)
+        {
+            await Clients.Others.ReceiveMessageForOtherClient(message);
+        }
+
+
+        //spesific bir istemciye mesaj gönderir
+        public async Task BroadcastMessageToIndividualClient(string connectionId, string message)
+        {
+            await Clients.Client(connectionId).ReceiveMessageForIndividualClient(message);
+        } 
     }
 }

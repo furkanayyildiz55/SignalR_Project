@@ -8,6 +8,8 @@
 
         Task ReceiveMessageForAllClient(string message);
         Task ReceiveConnectedClientCountForAllClient(int clientCount);
-        Task ReceiveMessageForCallerClient(string message);
+        Task ReceiveMessageForCallerClient(string message); 
+        Task ReceiveMessageForOtherClient(string message);
+        Task ReceiveMessageForIndividualClient(string message);
     }
 }
