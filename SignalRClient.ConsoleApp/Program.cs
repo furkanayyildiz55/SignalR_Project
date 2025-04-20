@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿//SignalR işlemlerini yapabilmek için Microsoft.AspNetCore.SignalR.Client paketi yüklendi.
+
+using Microsoft.AspNetCore.SignalR.Client;
 using SignalRClient.ConsoleApp.Model;
 
 Console.WriteLine("SignalR Console Client ");
