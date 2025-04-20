@@ -16,6 +16,9 @@ $(document).ready(function () {
     const broadcastMessageToIndividualClient = "BroadcastMessageToIndividualClient";
     const receiveMessageForIndividualClient = "ReceiveMessageForIndividualClient";
 
+    const receiveTypedMessageForAllClient = "ReceiveTypedMessageForAllClient";
+    const broadcastTypedMessageToAllClient = "BroadcastTypedMessageToAllClient";
+
     ///BAĞLANTI İŞLEMLERİ
     const connection = new signalR.HubConnectionBuilder().
         //Bağlantı URL'sini ayarla
@@ -166,6 +169,29 @@ $(document).ready(function () {
     })
 
     //GRUP İŞLEMLERİ ÖRNEĞİ
+
+    //TİP GÜVENLİ MESAJ GÖNDERME
+
+    $("#btn-send-typed-message-all-client").click(function () {
+
+        const product = {
+            id: 1,
+            name: "Product 1",
+            price: 100
+        }
+
+        connection.invoke(broadcastTypedMessageToAllClient, product).catch(err => console.error("Hata", err));
+        console.log("(Typed Mesaj) Mesaj Gönderildi");
+
+    })
+
+    connection.on(receiveTypedMessageForAllClient, (product) => {
+
+        console.log("(Typed Mesaj) Gelen Mesaj", product);
+    })
+
+    //TİP GÜVENLİ MESAJ GÖNDERME
+
 
 
 })

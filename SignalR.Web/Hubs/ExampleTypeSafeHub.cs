@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SignalR.Web.Model;
 
 namespace SignalR.Web.Hubs
 {
@@ -47,7 +48,7 @@ namespace SignalR.Web.Hubs
         }
 
         #region Grup İşlemleri
-        //Bir grup içindeki clientlere mesaj göndeme
+        //Grup ismi vererek içindeki clientlere mesaj göndeme
         public async Task BroadcastMessageToGroupClients(string groupName, string message)
         {
             await Clients.Group(groupName).ReceiveMessageForGroupClients(message);
@@ -57,18 +58,26 @@ namespace SignalR.Web.Hubs
         public async Task AddGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await Clients.Caller.ReceiveMessageForCallerClient($"Yeni bir gruba eklendin. Grup Adı: {groupName}");
-            await Clients.Caller.ReceiveMessageForOtherClient($"Yeni bir kullanıcı gruba eklendi. Kullanıcı Adı: {Context.ConnectionId} Grup Adı: {groupName}");
-            await Clients.Groups(groupName).ReceiveMessageForGroupClients($"Yeni bir kullanıcı bizim gruba eklendi.");
+            await Clients.Caller.ReceiveMessageForCallerClient($"(Caller) Yeni bir gruba eklendin. Grup Adı: {groupName}");
+            await Clients.Groups(groupName).ReceiveMessageForGroupClients($"(Groups) Yeni bir kullanıcı bizim gruba eklendi.");
         }
         //clienti gruptan çıkarma
         public async Task RemoveGroup(string groupName)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-            await Clients.Caller.ReceiveMessageForCallerClient($"Bir gruptan Ayrıldın. Grup Adı: {groupName}");
-            await Clients.Caller.ReceiveMessageForOtherClient($"Bir kullanıcı gruptan ayrıldı. Kullanıcı Adı: {Context.ConnectionId} Grup Adı: {groupName}");
-            await Clients.Groups(groupName).ReceiveMessageForGroupClients($"Yeni bir kullanıcı bizim gruptan ayrıldı.");
+            await Clients.Caller.ReceiveMessageForCallerClient($"(Caller) Bir gruptan Ayrıldın. Grup Adı: {groupName}");
+            await Clients.Groups(groupName).ReceiveMessageForGroupClients($"(Groups) Yeni bir kullanıcı bizim gruptan ayrıldı.");
         }
+
+        #endregion
+
+        #region Tip Güvenlikli Gönderim
+
+        public async Task BroadcastTypedMessageToAllClient(Product product)
+        {
+            await Clients.All.ReceiveTypedMessageForAllClient(product);
+        }
+
 
         #endregion
     }

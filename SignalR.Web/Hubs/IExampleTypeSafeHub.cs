@@ -1,4 +1,6 @@
-﻿namespace SignalR.Web.Hubs
+﻿using SignalR.Web.Model;
+
+namespace SignalR.Web.Hubs
 {
 
     //Tip güvenlikli bir hub oluşturmak için, hub sınıfını Hub<T> arayüzü ile genişletilir
@@ -12,5 +14,7 @@
         Task ReceiveMessageForOtherClient(string message);
         Task ReceiveMessageForIndividualClient(string message);
         Task ReceiveMessageForGroupClients(string message);
+        Task ReceiveTypedMessageForAllClient(Product product);
+
     }
 }
