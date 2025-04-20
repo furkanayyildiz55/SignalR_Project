@@ -27,20 +27,28 @@ $(document).ready(function () {
         .configureLogging(signalR.LogLevel.Information).build();
 
     //Hub ile bağlantı başlatılır
-    function start() {
-        connection.start().then(() => {
-            console.log("Hub ile bağlantı kuruldu");
-            //Connection ID işlemleri
-            $("#connectionId").html(`Connection Id : ${connection.connectionId}`);
-        });
+    async function start() {
+
+        try {
+            await connection.start().then(() => {
+                console.log("Hub ile bağlantı kuruldu");
+                //Connection ID işlemleri
+                $("#connectionId").html(`Connection Id : ${connection.connectionId}`);
+            });
+
+        } catch (err) {
+            console.error("Bağlantı Hatası (Hub)", err);
+            setTimeout(() => start(), 2000)
+        }
     }
 
-    //Bağlantı başlatılır sorun olur ise 5 saniye sonra tekrar başlatılır
-    try {
-        start();
-    } catch (e) {
-        setTimeout(() => start(), 5000)
-    }
+    //bağlantı koptuğu zaman
+    connection.onclose(async () => {
+        //bağlanmak için bekleyecek
+        await start();
+    })
+
+    start();
     ///BAĞLANTI İŞLEMLERİ
 
 
