@@ -7,6 +7,8 @@ namespace SignalR.Web.Hubs
     {
         private static int ConnectedClientsCount = 0;
 
+        #region İstemci İşlemleri
+        //Tüm istemcilere mesaj gönderir
         public async Task BroadcastMessageToClient(string message)
         {
             await Clients.All.ReceiveMessageForAllClient(message);
@@ -40,12 +42,12 @@ namespace SignalR.Web.Hubs
             await Clients.Others.ReceiveMessageForOtherClient(message);
         }
 
-        
         //spesific bir istemciye mesaj gönderir
         public async Task BroadcastMessageToIndividualClient(string connectionId, string message)
         {
             await Clients.Client(connectionId).ReceiveMessageForIndividualClient(message);
         }
+        #endregion
 
         #region Grup İşlemleri
         //Grup ismi vererek içindeki clientlere mesaj göndeme
@@ -78,6 +80,44 @@ namespace SignalR.Web.Hubs
             await Clients.All.ReceiveTypedMessageForAllClient(product);
         }
 
+
+        #endregion
+
+        #region Stream Kullanımı
+
+
+        //İstemci taradından her next ifadesi ile veri gönderildiğinde IAsyncEnumerable içerisine gelir
+        //Veri gönderimlerinde metot bir kere tetiklerinir sonraki her next ifadesinde veri nameAsChunks içierisne otomatik gelir.
+        public async Task BroadcastStreamDataToAllClient(IAsyncEnumerable<string> nameAsChunks)
+        {
+            await foreach (var name in nameAsChunks)
+            {
+                await Clients.All.ReceiveMessageAsStreamForAllClients(name);
+                await Task.Delay(1000);
+ 
+            }
+        }
+
+        public async Task BroadcastStreamProductDataToAllClient(IAsyncEnumerable<Product> parts)
+        {
+            await foreach (Product product in parts)
+            {
+                await Clients.All.ReceiveProductAsStreamForAllClients(product);
+                await Task.Delay(1000);
+
+            }
+        }
+
+        //Client tarafı metotdu tetikler ve cliente stream olarak veri döner
+        //Metod sadece tetikleyen cliente veri gönderir, diğer clientler bu metodu bilmez.
+        public async IAsyncEnumerable<string> BroadcastFromHubToClient(int count)
+        {
+            foreach (var item in Enumerable.Range(1,count).ToList())
+            {
+                await Task.Delay(1000);
+                yield return $"{item}. Data";  //Foreach içerisinde yield keywordu ile anlık olarak data dönebiliyoruz.
+            }
+        }
 
         #endregion
     }

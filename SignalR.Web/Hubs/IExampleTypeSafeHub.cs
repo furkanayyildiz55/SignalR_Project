@@ -15,6 +15,8 @@ namespace SignalR.Web.Hubs
         Task ReceiveMessageForIndividualClient(string message);
         Task ReceiveMessageForGroupClients(string message);
         Task ReceiveTypedMessageForAllClient(Product product);
+        Task ReceiveMessageAsStreamForAllClients(string name);
+        Task ReceiveProductAsStreamForAllClients(Product product);
 
     }
 }
