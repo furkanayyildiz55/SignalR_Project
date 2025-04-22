@@ -1,4 +1,23 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿
+var toastTimeout;
 
-// Write your JavaScript code.
+//Tüm sayfalarda bağlantı işlemi yapmamak için, layout da ekli olan bu js de yapıyoruz. Böylece tüm sayfalara gitmiş oluyor
+$(document).ready(function () {
+
+    const connection = new window.signalR.HubConnectionBuilder().withUrl("/hub").build();
+
+    connection.start().then(() => { console.log("Bağlantı sağlandı.") })
+
+    connection.on("AlertCompleteFile", (downloadPath) => {
+
+        clearTimeout(toastTimeout);
+
+        $(".toast-body").html(`<p>Excel oluşturma işlemi tamamlanmıştır. Aşağıdaki link ile excel dosyasını indirebilirsiniz<p>
+        <a href="${downloadPath}">indir</a>
+        `);
+
+        $("#liveToast").show();
+
+    })
+
+})

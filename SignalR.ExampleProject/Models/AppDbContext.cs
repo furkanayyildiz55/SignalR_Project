@@ -9,7 +9,7 @@ namespace SignalR.ExampleProject.Models
         : IdentityDbContext<IdentityUser,IdentityRole,string>(options)
     {
 
-        public DbSet<Product> products { get; set; }
+        public DbSet<Product> Products { get; set; }
 
     }
 }
