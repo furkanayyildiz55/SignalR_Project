@@ -10,19 +10,21 @@ using SignalR.ExampleProject.Service;
 using System.Threading.Channels;
 
 var builder = WebApplication.CreateBuilder(args);
+// Add services to the container.
+builder.Services.AddControllersWithViews();
 
 //Dosyalar çalışmak için kullanılır, wwwroot okuma işlemleri kolaylaşır
 builder.Services.AddSingleton<IFileProvider>( new PhysicalFileProvider(Directory.GetCurrentDirectory()));
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+//Uygulamanın herhangi bir yerinden geçerli HTTP bağlamına (context) erişim sağlamak için kullanılır
+builder.Services.AddHttpContextAccessor();
 
-//uygulamanın herhangi bir yerinden geçerli HTTP bağlamına (context) erişim sağlamak için kullanılır
-builder.Services.AddHttpContextAccessor();  
+//FileService classı içerisinde http verilerine erişebilmek için scope olarak tanımlandı, bu nedenle scoped tanılanarak her istekte yeni bir instance oluşturulması sağlandı
+//builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<IFileService, FileService>(); //veya bu şekilde DI konteynırına eklenebilir
+//builder.Services.Add(new ServiceDescriptor(typeof(FileService) , ServiceLifetime.Scoped )); //veya bu şekilde DI konteynırına eklenebilir
 
-//FileService classı içerisinde http verilerine erişebilmek için scope olarak tanımlandı
-builder.Services.AddScoped<FileService>();
-//channel yapısı tanımladık
+//Shannel yapısı tanımladık
 builder.Services.AddSingleton(Channel.CreateUnbounded<(string userId, List<Product> products)>());
 //builder.Services.AddSingleton(Channel.CreateUnbounded<Tuple<string, List<Product>>>());
 

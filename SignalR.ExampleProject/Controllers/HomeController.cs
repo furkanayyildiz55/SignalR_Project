@@ -15,6 +15,9 @@ namespace SignalR.ExampleProject.Controllers
         SignInManager<IdentityUser> signInManager,
         AppDbContext context,
         FileService fileService) : Controller
+
+
+
     {
         //private readonly ILogger<HomeController> _logger;
 

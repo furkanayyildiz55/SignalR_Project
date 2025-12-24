@@ -9,7 +9,7 @@ namespace SignalR.ExampleProject.Service
         AppDbContext context, 
         IHttpContextAccessor httpContextAccessor, 
         UserManager<IdentityUser> userManager,
-        Channel<(string userId, List<Product> products)> channel)
+        Channel<(string userId, List<Product> products)> channel) : IFileService
     {
 
         public async Task<bool> AddMessageToQueue()

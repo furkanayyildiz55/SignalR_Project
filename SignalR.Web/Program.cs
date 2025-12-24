@@ -28,6 +28,6 @@ app.MapHub<ExampleTypeSafeHub>("/exampleTypeSafeHub");
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=ApiHubContextExample}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
